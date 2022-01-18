@@ -16,6 +16,7 @@ AdminPlugin *adminPlugin;
 /// Also, to make setting work correctly, if someone tries to set a string to this reserved value we assume they don't really want
 /// a change.
 static const char *secretReserved = "sekrit";
+char short_call[3];
 
 /// If buf is !empty, change it to secret
 static void hideSecret(char *buf)
@@ -131,18 +132,14 @@ void AdminPlugin::handleSetOwner(const User &o)
     if (*o.long_name) {
         changed |= strcmp(owner.long_name, o.long_name);
         strcpy(owner.long_name, o.long_name);
+        short_call[0] = owner.long_name[3];
+        short_call[1] = owner.long_name[4];
+        short_call[2] = owner.long_name[5];
+        strcpy(owner.short_name, short_call);
     }
     if (*o.short_name) {
         changed |= strcmp(owner.short_name, o.short_name);
-        char short_call[3];
-        if (sizeof(owner.long_name) > 4) {
-            short_call[0] = owner.long_name[3];
-            short_call[1] = owner.long_name[4];
-            short_call[2] = owner.long_name[5];
-            strcpy(owner.short_name, short_call);
-        } else {
-            strcpy(owner.short_name, o.short_name);
-        }
+        strcpy(owner.short_name, short_call);
     }
     if (*o.id) {
         changed |= strcmp(owner.id, o.id);
