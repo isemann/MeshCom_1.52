@@ -21,17 +21,18 @@ Region: EU433\
 filename: src/configuration.h, line 634-636
 * Reconnect to MeshCom server after reboot
 filename: src/mqtt/MQTT.cpp
-
-
-
-[Firmware fuer den TTGO TBeam (langes Board)](https://isemann.at/files/tbeam_meshcom_1.2.50_v1.50.bin)
-
-[Firmware fuer den TLora (kleines Board)](https://isemann.at/files/tlora-v2_meshcom_1.2.50_v1.50.bin)
-
-[Firmware fuer den Heltec](https://isemann.at/files/heltec-v2_meshcom_1.2.50_v1.50.bin)
-
-
-ToDo:
 * ShortName = Suffix ( MZC) oder CALL (OE3MZC/p)
+filename: scr/plugins/AdminPlugin.cpp, line 134-142
+
+
+
+[Firmware fuer den TTGO TBeam (langes Board)](https://isemann.at/files/tbeam_meshcom_1.2.52_v1.52.bin)
+
+[Firmware fuer den TLora (kleines Board)](https://isemann.at/files/tlora-v2_meshcom_1.2.52_v1.52.bin)
+
+[Firmware fuer den Heltec](https://isemann.at/files/heltec-v2_meshcom_1.2.52_v1.52.bin)
+
+
+
 
 
