@@ -4,7 +4,7 @@ Meshtastic Source-Code angepasst für MeshCom Projekt:
 
 * Bluetooth PIN wurde fix auf "000000" gesetzt, erleichtert Verbindung mit dem Smartphone\
 filename: nimble/BluetoothUtil.cpp, line 242\
-filename: src/coniguration.h, line 592
+filename: src/configuration.h, line 592
 * HOP_Limit für Nachrichten wurde auf 5 erhöht, damit Nachrichten im Mesh-Netzwerk 5 mal von anderen Nodes weitergesendet werden.\
 filename: mesh/MeshTypes.h, line 37
 * MeshCom logo und ÖVSV link\
