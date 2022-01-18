@@ -101,83 +101,83 @@ void setGPSPower(bool on)
 // Perform power on init that we do on each wake from deep sleep
 void initDeepSleep()
 {
-#ifndef NO_ESP32
-    bootCount++;
-    wakeCause = esp_sleep_get_wakeup_cause();
-    /*
-      Not using yet because we are using wake on all buttons being low
+// #ifndef NO_ESP32
+//     bootCount++;
+//     wakeCause = esp_sleep_get_wakeup_cause();
+//     /*
+//       Not using yet because we are using wake on all buttons being low
 
-      wakeButtons = esp_sleep_get_ext1_wakeup_status();       // If one of these buttons is set it was the reason we woke
-      if (wakeCause == ESP_SLEEP_WAKEUP_EXT1 && !wakeButtons) // we must have been using the 'all buttons rule for waking' to
-      support busted boards, assume button one was pressed wakeButtons = ((uint64_t)1) << buttons.gpios[0];
-      */
+//       wakeButtons = esp_sleep_get_ext1_wakeup_status();       // If one of these buttons is set it was the reason we woke
+//       if (wakeCause == ESP_SLEEP_WAKEUP_EXT1 && !wakeButtons) // we must have been using the 'all buttons rule for waking' to
+//       support busted boards, assume button one was pressed wakeButtons = ((uint64_t)1) << buttons.gpios[0];
+//       */
 
-    // If we booted because our timer ran out or the user pressed reset, send those as fake events
-    const char *reason = "reset"; // our best guess
-    RESET_REASON hwReason = rtc_get_reset_reason(0);
+//     // If we booted because our timer ran out or the user pressed reset, send those as fake events
+//     const char *reason = "reset"; // our best guess
+//     RESET_REASON hwReason = rtc_get_reset_reason(0);
 
-    if (hwReason == RTCWDT_BROWN_OUT_RESET)
-        reason = "brownout";
+//     if (hwReason == RTCWDT_BROWN_OUT_RESET)
+//         reason = "brownout";
 
-    if (hwReason == TG0WDT_SYS_RESET)
-        reason = "taskWatchdog";
+//     if (hwReason == TG0WDT_SYS_RESET)
+//         reason = "taskWatchdog";
 
-    if (hwReason == TG1WDT_SYS_RESET)
-        reason = "intWatchdog";
+//     if (hwReason == TG1WDT_SYS_RESET)
+//         reason = "intWatchdog";
 
-    if (wakeCause == ESP_SLEEP_WAKEUP_TIMER)
-        reason = "timeout";
+//     if (wakeCause == ESP_SLEEP_WAKEUP_TIMER)
+//         reason = "timeout";
 
-    DEBUG_MSG("booted, wake cause %d (boot count %d), reset_reason=%s\n", wakeCause, bootCount, reason);
-#endif
+//     DEBUG_MSG("booted, wake cause %d (boot count %d), reset_reason=%s\n", wakeCause, bootCount, reason);
+// #endif
 }
 
 bool doPreflightSleep()
 {
-    if (preflightSleep.notifyObservers(NULL) != 0)
-        return false; // vetoed
-    else
+    // if (preflightSleep.notifyObservers(NULL) != 0)
+    //     return false; // vetoed
+    // else
         return true;
 }
 
 /// Tell devices we are going to sleep and wait for them to handle things
 static void waitEnterSleep()
 {
-    uint32_t now = millis();
-    while (!doPreflightSleep()) {
-        delay(100); // Kinda yucky - wait until radio says say we can shutdown (finished in process sends/receives)
+    // uint32_t now = millis();
+    // while (!doPreflightSleep()) {
+    //     delay(100); // Kinda yucky - wait until radio says say we can shutdown (finished in process sends/receives)
 
-        if (millis() - now > 30 * 1000) { // If we wait too long just report an error and go to sleep
-            RECORD_CRITICALERROR(CriticalErrorCode_SleepEnterWait);
-            assert(0); // FIXME - for now we just restart, need to fix bug #167
-            break;
-        }
-    }
+    //     if (millis() - now > 30 * 1000) { // If we wait too long just report an error and go to sleep
+    //         RECORD_CRITICALERROR(CriticalErrorCode_SleepEnterWait);
+    //         assert(0); // FIXME - for now we just restart, need to fix bug #167
+    //         break;
+    //     }
+    // }
 
-    // Code that still needs to be moved into notifyObservers
-    Serial.flush();            // send all our characters before we stop cpu clock
-    setBluetoothEnable(false); // has to be off before calling light sleep
+    // // Code that still needs to be moved into notifyObservers
+    // Serial.flush();            // send all our characters before we stop cpu clock
+    // setBluetoothEnable(false); // has to be off before calling light sleep
 
-    notifySleep.notifyObservers(NULL);
+    // notifySleep.notifyObservers(NULL);
 }
 
 void doDeepSleep(uint64_t msecToWake)
 {
-    DEBUG_MSG("Entering deep sleep for %lu seconds\n", msecToWake / 1000);
+    // DEBUG_MSG("Entering deep sleep for %lu seconds\n", msecToWake / 1000);
 
-    // not using wifi yet, but once we are this is needed to shutoff the radio hw
-    // esp_wifi_stop();
-    waitEnterSleep();
-    notifyDeepSleep.notifyObservers(NULL);
+    // // not using wifi yet, but once we are this is needed to shutoff the radio hw
+    // // esp_wifi_stop();
+    // waitEnterSleep();
+    // notifyDeepSleep.notifyObservers(NULL);
 
-    screen->doDeepSleep(); // datasheet says this will draw only 10ua
+    // screen->doDeepSleep(); // datasheet says this will draw only 10ua
 
-    nodeDB.saveToDisk();
+    // nodeDB.saveToDisk();
 
-    // Kill GPS power completely (even if previously we just had it in sleep mode)
-    setGPSPower(false);
+    // // Kill GPS power completely (even if previously we just had it in sleep mode)
+    // setGPSPower(false);
 
-    setLed(false);
+    // setLed(false);
 
 #ifdef RESET_OLED
     digitalWrite(RESET_OLED, 1); // put the display in reset before killing its power
@@ -217,60 +217,60 @@ esp_sleep_wakeup_cause_t doLightSleep(uint64_t sleepMsec) // FIXME, use a more r
 {
     // DEBUG_MSG("Enter light sleep\n");
 
-    waitEnterSleep();
+//     waitEnterSleep();
 
-    uint64_t sleepUsec = sleepMsec * 1000LL;
+//     uint64_t sleepUsec = sleepMsec * 1000LL;
 
-    // NOTE! ESP docs say we must disable bluetooth and wifi before light sleep
+//     // NOTE! ESP docs say we must disable bluetooth and wifi before light sleep
 
-    // We want RTC peripherals to stay on
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON);
+//     // We want RTC peripherals to stay on
+//     esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON);
 
-#ifdef BUTTON_NEED_PULLUP
-    gpio_pullup_en((gpio_num_t)BUTTON_PIN);
-#endif
+// #ifdef BUTTON_NEED_PULLUP
+//     gpio_pullup_en((gpio_num_t)BUTTON_PIN);
+// #endif
 
-#ifdef SERIAL0_RX_GPIO
-    // We treat the serial port as a GPIO for a fast/low power way of waking, if we see a rising edge that means
-    // someone started to send something
+// #ifdef SERIAL0_RX_GPIO
+//     // We treat the serial port as a GPIO for a fast/low power way of waking, if we see a rising edge that means
+//     // someone started to send something
 
-    // gpio 3 is RXD for serialport 0 on ESP32
-    // Send a few Z characters to wake the port
+//     // gpio 3 is RXD for serialport 0 on ESP32
+//     // Send a few Z characters to wake the port
 
-    // this doesn't work on TBEAMs when the USB is depowered (causes bogus interrupts)
-    // So we disable this "wake on serial" feature - because now when a TBEAM (only) has power connected it
-    // never tries to go to sleep if the user is using the API
-    // gpio_wakeup_enable((gpio_num_t)SERIAL0_RX_GPIO, GPIO_INTR_LOW_LEVEL);
+//     // this doesn't work on TBEAMs when the USB is depowered (causes bogus interrupts)
+//     // So we disable this "wake on serial" feature - because now when a TBEAM (only) has power connected it
+//     // never tries to go to sleep if the user is using the API
+//     // gpio_wakeup_enable((gpio_num_t)SERIAL0_RX_GPIO, GPIO_INTR_LOW_LEVEL);
 
-    // doesn't help - I think the USB-UART chip losing power is pulling the signal llow
-    // gpio_pullup_en((gpio_num_t)SERIAL0_RX_GPIO);
+//     // doesn't help - I think the USB-UART chip losing power is pulling the signal llow
+//     // gpio_pullup_en((gpio_num_t)SERIAL0_RX_GPIO);
 
-    // alas - can only work if using the refclock, which is limited to about 9600 bps
-    // assert(uart_set_wakeup_threshold(UART_NUM_0, 3) == ESP_OK);
-    // assert(esp_sleep_enable_uart_wakeup(0) == ESP_OK);
-#endif
-#ifdef BUTTON_PIN
-    gpio_wakeup_enable((gpio_num_t)BUTTON_PIN, GPIO_INTR_LOW_LEVEL); // when user presses, this button goes low
-#endif
-#ifdef RF95_IRQ_GPIO
-    gpio_wakeup_enable((gpio_num_t)RF95_IRQ_GPIO, GPIO_INTR_HIGH_LEVEL); // RF95 interrupt, active high
-#endif
-#ifdef PMU_IRQ
-    // wake due to PMU can happen repeatedly if there is no battery installed or the battery fills
-    if (axp192_found)
-        gpio_wakeup_enable((gpio_num_t)PMU_IRQ, GPIO_INTR_LOW_LEVEL); // pmu irq
-#endif
-    assert(esp_sleep_enable_gpio_wakeup() == ESP_OK);
-    assert(esp_sleep_enable_timer_wakeup(sleepUsec) == ESP_OK);
-    assert(esp_light_sleep_start() == ESP_OK);
+//     // alas - can only work if using the refclock, which is limited to about 9600 bps
+//     // assert(uart_set_wakeup_threshold(UART_NUM_0, 3) == ESP_OK);
+//     // assert(esp_sleep_enable_uart_wakeup(0) == ESP_OK);
+// #endif
+// #ifdef BUTTON_PIN
+//     gpio_wakeup_enable((gpio_num_t)BUTTON_PIN, GPIO_INTR_LOW_LEVEL); // when user presses, this button goes low
+// #endif
+// #ifdef RF95_IRQ_GPIO
+//     gpio_wakeup_enable((gpio_num_t)RF95_IRQ_GPIO, GPIO_INTR_HIGH_LEVEL); // RF95 interrupt, active high
+// #endif
+// #ifdef PMU_IRQ
+//     // wake due to PMU can happen repeatedly if there is no battery installed or the battery fills
+//     if (axp192_found)
+//         gpio_wakeup_enable((gpio_num_t)PMU_IRQ, GPIO_INTR_LOW_LEVEL); // pmu irq
+// #endif
+//     assert(esp_sleep_enable_gpio_wakeup() == ESP_OK);
+//     assert(esp_sleep_enable_timer_wakeup(sleepUsec) == ESP_OK);
+//     assert(esp_light_sleep_start() == ESP_OK);
 
-    esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
-#ifdef BUTTON_PIN
-    if (cause == ESP_SLEEP_WAKEUP_GPIO)
-        DEBUG_MSG("Exit light sleep gpio: btn=%d\n", !digitalRead(BUTTON_PIN));
-#endif
+//     esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
+// #ifdef BUTTON_PIN
+//     if (cause == ESP_SLEEP_WAKEUP_GPIO)
+//         DEBUG_MSG("Exit light sleep gpio: btn=%d\n", !digitalRead(BUTTON_PIN));
+// #endif
 
-    return cause;
+//     return cause;
 }
 
 // not legal on the stock android ESP build
@@ -284,11 +284,11 @@ esp_sleep_wakeup_cause_t doLightSleep(uint64_t sleepMsec) // FIXME, use a more r
  */
 void enableModemSleep()
 {
-    static esp_pm_config_esp32_t config; // filled with zeros because bss
+    // static esp_pm_config_esp32_t config; // filled with zeros because bss
 
-    config.max_freq_mhz = CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ;
-    config.min_freq_mhz = 20; // 10Mhz is minimum recommended
-    config.light_sleep_enable = false;
-    DEBUG_MSG("Sleep request result %x\n", esp_pm_configure(&config));
+    // config.max_freq_mhz = CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ;
+    // config.min_freq_mhz = 20; // 10Mhz is minimum recommended
+    // config.light_sleep_enable = false;
+    // DEBUG_MSG("Sleep request result %x\n", esp_pm_configure(&config));
 }
 #endif

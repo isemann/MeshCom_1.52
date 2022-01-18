@@ -239,8 +239,8 @@ static int gap_event(struct ble_gap_event *event, void *arg)
                 pkey.passkey = defaultBLEPin;
             } else {
                 DEBUG_MSG("Using random passkey\n");
-                pkey.passkey = random(
-                    100000, 999999); // This is the passkey to be entered on peer - we pick a number >100,000 to ensure 6 digits
+                pkey.passkey = defaultBLEPin; //random(
+                    //100000, 999999); // This is the passkey to be entered on peer - we pick a number >100,000 to ensure 6 digits
             }
             DEBUG_MSG("*** Enter passkey %d on the peer side ***\n", pkey.passkey);
 
