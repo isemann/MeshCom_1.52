@@ -19,9 +19,9 @@ PSK Encryption NONE\
 Channel: Very Long Range Very Slow (BW125kHz)\
 Region: EU433\
 filename: src/configuration.h, line 634-636
-* Reconnect to MeshCom server after reboot
+* Reconnect to MeshCom server after reboot\
 filename: src/mqtt/MQTT.cpp
-* ShortName = Suffix ( MZC) oder CALL (OE3MZC/p)
+* ShortName = Suffix ( MZC) oder CALL (OE3MZC/p)\
 filename: scr/plugins/AdminPlugin.cpp, line 134-142
 
 
